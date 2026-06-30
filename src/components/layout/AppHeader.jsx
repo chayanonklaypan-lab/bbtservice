@@ -4,10 +4,12 @@ import { AppBar, Avatar, Box, Chip, IconButton, Toolbar, Tooltip, Typography } f
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useAppSettings } from '../../contexts/AppSettingsContext';
 import { useThemeMode } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AppHeader = ({ drawerWidth, headerHeight, onOpenSidebar }) => {
+  const { settings } = useAppSettings();
   const { mode, toggleTheme } = useThemeMode();
   const { user } = useAuth();
 
@@ -30,7 +32,7 @@ const AppHeader = ({ drawerWidth, headerHeight, onOpenSidebar }) => {
         </IconButton>
         <Box sx={{ minWidth: 0, flexGrow: 1 }}>
           <Typography variant="h6" noWrap sx={{ fontWeight: 800, fontSize: { xs: 17, sm: 19 } }}>
-            ระบบบริหารงานบริการสาธารณสุข
+            {settings.siteName}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap sx={{ display: { xs: 'none', sm: 'block' } }}>
             จัดการคำร้อง ตารางงาน รถบริการ และรายงาน

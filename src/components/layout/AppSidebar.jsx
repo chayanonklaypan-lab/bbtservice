@@ -9,6 +9,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useAppSettings } from '../../contexts/AppSettingsContext';
 import { useAuth } from '../../contexts/AuthContext';
 import municipalityLogo from '../../assets/municipality-logo.jpg';
 
@@ -23,6 +24,7 @@ const menuItems = [
 ];
 
 const AppSidebar = ({ drawerWidth, open, onClose }) => {
+  const { settings } = useAppSettings();
   const { user } = useAuth();
   const location = useLocation();
   const visibleItems = menuItems.filter((item) => item.allowedRoles.includes(user?.role));
@@ -33,7 +35,7 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
         <Box
           component="img"
           src={municipalityLogo}
-          alt="เทศบาลนครบางบัวทอง"
+          alt={settings.organizationName}
           sx={{
             width: 44,
             height: 44,
@@ -46,10 +48,10 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
         />
         <Box sx={{ minWidth: 0 }}>
           <Typography variant="subtitle2" noWrap sx={{ fontWeight: 800, lineHeight: 1.25 }}>
-            เทศบาลนครบางบัวทอง
+            {settings.organizationName}
           </Typography>
           <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block', mt: 0.25 }}>
-            ระบบงานบริการสาธารณสุข
+            {settings.siteName}
           </Typography>
         </Box>
       </Box>
@@ -87,6 +89,13 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
           );
         })}
       </List>
+      {settings.contactEmail && (
+        <Box sx={{ mt: 'auto', px: 2, py: 1.5 }}>
+          <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
+            ติดต่อ: {settings.contactEmail}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 

@@ -152,8 +152,19 @@ export const getSettings = async () => {
   return snapshot.docs.map((docItem) => ({ id: docItem.id, ...docItem.data() }));
 };
 
+export const getSystemSettings = async () => {
+  const settingDoc = doc(settingsRef, 'system-settings');
+  const snapshot = await getDoc(settingDoc);
+  return snapshot.exists() ? snapshot.data() : null;
+};
+
 export const updateSetting = async (id, payload) => {
   const settingDoc = doc(settingsRef, id);
+  await setDoc(settingDoc, { ...payload, updatedAt: Timestamp.now() }, { merge: true });
+};
+
+export const updateSystemSettings = async (payload) => {
+  const settingDoc = doc(settingsRef, 'system-settings');
   await setDoc(settingDoc, { ...payload, updatedAt: Timestamp.now() }, { merge: true });
 };
 

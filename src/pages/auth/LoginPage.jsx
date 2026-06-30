@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Paper, Typography } from '@mui/material';
+import { useAppSettings } from '../../contexts/AppSettingsContext';
 import appRoutes from '../../constants/appRoutes';
 import municipalityLogo from '../../assets/municipality-logo.jpg';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { settings } = useAppSettings();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,12 +23,12 @@ const LoginPage = () => {
         <Box
           component="img"
           src={municipalityLogo}
-          alt="เทศบาลนครบางบัวทอง"
+          alt={settings.organizationName}
           sx={{ width: 96, height: 96, borderRadius: '50%', objectFit: 'cover', mb: 2 }}
         />
-        <Typography variant="h5">เทศบาลนครบางบัวทอง</Typography>
+        <Typography variant="h5">{settings.organizationName}</Typography>
         <Typography color="text.secondary" sx={{ mt: 0.75 }}>
-          ระบบบริหารงานบริการสาธารณสุข
+          {settings.siteName}
         </Typography>
         <CircularProgress size={32} sx={{ mt: 3 }} />
         <Typography color="text.secondary" sx={{ mt: 1.5 }}>

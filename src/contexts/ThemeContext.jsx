@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const ThemeModeContext = createContext(null);
@@ -47,8 +47,13 @@ const buildTheme = (mode) => createTheme({
   },
 });
 
-export const ThemeModeProvider = ({ children }) => {
-  const [mode, setMode] = useState('light');
+export const ThemeModeProvider = ({ children, initialMode = 'light' }) => {
+  const normalizedInitialMode = initialMode === 'dark' ? 'dark' : 'light';
+  const [mode, setMode] = useState(normalizedInitialMode);
+
+  useEffect(() => {
+    setMode(normalizedInitialMode);
+  }, [normalizedInitialMode]);
 
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
