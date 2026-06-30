@@ -1,5 +1,6 @@
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
+import requestStatus from '../constants/status';
 
 const requestsRef = collection(db, 'requests');
 
@@ -16,11 +17,18 @@ export const getDashboardSummary = async () => {
 
   return {
     totalRequests: items.length,
-    completed: statusGroups['เสร็จสิ้น'] || 0,
-    pending: items.length - (statusGroups['เสร็จสิ้น'] || 0) - (statusGroups['ยกเลิก'] || 0),
-    cancelled: statusGroups['ยกเลิก'] || 0,
+    completed: statusGroups[requestStatus.COMPLETED] || 0,
+    pending:
+      items.length -
+      (statusGroups[requestStatus.COMPLETED] || 0) -
+      (statusGroups[requestStatus.CANCELLED] || 0),
+    cancelled: statusGroups[requestStatus.CANCELLED] || 0,
     byMonth: items.reduce((acc, item) => {
-      const month = item.createdAt?.toDate ? item.createdAt.toDate().getMonth() + 1 : new Date(item.createdAt).getMonth() + 1;
+      const date = item.createdAt?.toDate ? item.createdAt.toDate() : new Date(item.createdAt);
+      if (Number.isNaN(date.getTime())) {
+        return acc;
+      }
+      const month = date.getMonth() + 1;
       const monthKey = `${month}`.padStart(2, '0');
       acc[monthKey] = (acc[monthKey] || 0) + 1;
       return acc;

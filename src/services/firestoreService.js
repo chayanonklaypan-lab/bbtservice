@@ -13,6 +13,8 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
+import requestStatus from '../constants/status';
+import vehicleStatus from '../constants/vehicleStatus';
 
 const requestsRef = collection(db, 'requests');
 const timelineRef = collection(db, 'timeline');
@@ -57,7 +59,7 @@ export const createRequest = async (payload) => {
     ...payload,
     requestId,
     receivedDate: now.toDate().toISOString(),
-    status: 'รับคำร้อง',
+    status: requestStatus.NEW,
     createdAt: now,
     updatedAt: now,
   };
@@ -100,7 +102,7 @@ export const getVehicles = async () => {
 export const createVehicle = async (payload) => {
   const vehicle = {
     ...payload,
-    status: payload.status || 'พร้อม',
+    status: payload.status || vehicleStatus.AVAILABLE,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   };
