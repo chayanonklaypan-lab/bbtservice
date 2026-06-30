@@ -10,6 +10,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import municipalityLogo from '../../assets/municipality-logo.jpg';
 
 const menuItems = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/', allowedRoles: ['Admin', 'Operator', 'Director'] },
@@ -28,13 +29,29 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
 
   const drawerContent = (
     <>
-      <Box sx={{ px: 2.5, py: 2.25 }}>
-        <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
-          BBT Service
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          Service Operations
-        </Typography>
+      <Box sx={{ px: 2.5, py: 2.25, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box
+          component="img"
+          src={municipalityLogo}
+          alt="เทศบาลนครบางบัวทอง"
+          sx={{
+            width: 56,
+            height: 56,
+            borderRadius: '50%',
+            objectFit: 'cover',
+            flexShrink: 0,
+            border: 1,
+            borderColor: 'divider',
+          }}
+        />
+        <Box sx={{ minWidth: 0 }}>
+          <Typography variant="subtitle1" noWrap sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+            เทศบาลนครบางบัวทอง
+          </Typography>
+          <Typography variant="body2" color="text.secondary" noWrap sx={{ mt: 0.5 }}>
+            ระบบงานบริการสาธารณสุข
+          </Typography>
+        </Box>
       </Box>
       <Divider />
       <List sx={{ px: 1.5, py: 1.5 }}>
