@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import FullCalendar from '@fullcalendar/react';
+import thLocale from '@fullcalendar/core/locales/th';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -44,12 +45,24 @@ const RequestCalendar = () => {
     >
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+        locale={thLocale}
         initialView="dayGridMonth"
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
         }}
+        buttonText={{
+          today: 'วันนี้',
+          month: 'เดือน',
+          week: 'สัปดาห์',
+          day: 'วัน',
+          list: 'รายการ',
+        }}
+        allDayText="ทั้งวัน"
+        noEventsText="ไม่มีงานบริการ"
+        titleFormat={{ year: 'numeric', month: 'long' }}
+        dayHeaderFormat={{ weekday: 'short' }}
         events={events}
         editable
         selectable
