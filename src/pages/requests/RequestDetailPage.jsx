@@ -56,8 +56,15 @@ const RequestDetailPage = () => {
   }, [id]);
 
   const handleProgressSubmit = async () => {
-    if (!progressMessage.trim()) {
+    const normalizedProgressMessage = progressMessage.trim();
+
+    if (!normalizedProgressMessage) {
       showNotification('กรุณากรอกข้อความอัปเดต', 'warning');
+      return;
+    }
+
+    if (!progressStatus) {
+      showNotification('กรุณาเลือกสถานะ', 'warning');
       return;
     }
 
@@ -65,7 +72,7 @@ const RequestDetailPage = () => {
     try {
       await addTimelineEntry(id, {
         editorName: 'ผู้ใช้ระบบ',
-        message: progressMessage,
+        message: normalizedProgressMessage,
         status: progressStatus,
       });
       await updateRequest(id, { status: progressStatus });

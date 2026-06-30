@@ -35,6 +35,16 @@ const initialVehicle = {
   status: 'พร้อม',
 };
 
+const toTrimmedString = (value) => `${value ?? ''}`.trim();
+
+const trimVehicleForm = (vehicle) => ({
+  licensePlate: toTrimmedString(vehicle.licensePlate),
+  name: toTrimmedString(vehicle.name),
+  type: toTrimmedString(vehicle.type),
+  driverName: toTrimmedString(vehicle.driverName),
+  status: vehicle.status,
+});
+
 const VehiclePage = () => {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,13 +96,20 @@ const VehiclePage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const normalizedForm = trimVehicleForm(form);
+
+    if (!normalizedForm.licensePlate || !normalizedForm.name || !normalizedForm.type) {
+      showNotification('กรุณากรอกทะเบียนรถ ชื่อรถ และประเภทรถ', 'warning');
+      return;
+    }
+
     setSubmitting(true);
     try {
       if (editingId) {
-        await updateVehicle(editingId, form);
+        await updateVehicle(editingId, normalizedForm);
         showNotification('แก้ไขข้อมูลรถเรียบร้อย', 'success');
       } else {
-        await createVehicle(form);
+        await createVehicle(normalizedForm);
         showNotification('เพิ่มรถใหม่เรียบร้อย', 'success');
       }
       handleCloseDialog();

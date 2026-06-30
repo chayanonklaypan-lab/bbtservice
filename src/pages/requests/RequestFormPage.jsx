@@ -21,6 +21,21 @@ const defaultValues = {
   vehicleId: '',
 };
 
+const toTrimmedString = (value) => `${value ?? ''}`.trim();
+
+const trimRequestForm = (request) => ({
+  requesterName: toTrimmedString(request.requesterName),
+  requesterPhone: toTrimmedString(request.requesterPhone),
+  requestType: request.requestType,
+  description: toTrimmedString(request.description),
+  address: toTrimmedString(request.address),
+  district: toTrimmedString(request.district),
+  amphoe: toTrimmedString(request.amphoe),
+  province: toTrimmedString(request.province),
+  assigneeId: request.assigneeId,
+  vehicleId: request.vehicleId,
+});
+
 const RequestFormPage = () => {
   const navigate = useNavigate();
   const { showNotification } = useNotifications();
@@ -48,8 +63,20 @@ const RequestFormPage = () => {
   }, []);
 
   const onSubmit = async (data) => {
+    const normalizedData = trimRequestForm(data);
+
+    if (
+      !normalizedData.requesterName ||
+      !normalizedData.requesterPhone ||
+      !normalizedData.requestType ||
+      !normalizedData.description
+    ) {
+      showNotification('กรุณากรอกชื่อผู้แจ้ง เบอร์โทร ประเภทงาน และรายละเอียด', 'warning');
+      return;
+    }
+
     try {
-      await createRequest(data);
+      await createRequest(normalizedData);
       showNotification('สร้างคำร้องเรียบร้อย', 'success');
       navigate('/requests');
     } catch (error) {

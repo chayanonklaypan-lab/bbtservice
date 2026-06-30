@@ -32,6 +32,14 @@ const initialStaff = {
   role: roles.OPERATOR,
 };
 
+const toTrimmedString = (value) => `${value ?? ''}`.trim();
+
+const trimStaffForm = (member) => ({
+  displayName: toTrimmedString(member.displayName),
+  email: toTrimmedString(member.email),
+  role: member.role,
+});
+
 const StaffPage = () => {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,13 +89,25 @@ const StaffPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const normalizedForm = trimStaffForm(form);
+
+    if (!normalizedForm.displayName || !normalizedForm.email || !normalizedForm.role) {
+      showNotification('กรุณากรอกชื่อ อีเมล และบทบาท', 'warning');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedForm.email)) {
+      showNotification('รูปแบบอีเมลไม่ถูกต้อง', 'warning');
+      return;
+    }
+
     setSubmitting(true);
     try {
       if (editingId) {
-        await updateUser(editingId, form);
+        await updateUser(editingId, normalizedForm);
         showNotification('แก้ไขข้อมูลเจ้าหน้าที่เรียบร้อย', 'success');
       } else {
-        await createUser(form);
+        await createUser(normalizedForm);
         showNotification('เพิ่มเจ้าหน้าที่ใหม่เรียบร้อย', 'success');
       }
       handleCloseDialog();
