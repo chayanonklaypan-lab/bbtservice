@@ -13,13 +13,19 @@ React + Vite + Firebase Hosting project.
 - Hosting project ID: `bbtservice-14587`
 - Hosting URL: `https://bbtservice-14587.web.app`
 
+## Vercel
+
+- Production URL: `https://bbtservice-14587.vercel.app`
+- Deploy command: `npm run deploy:vercel`
+
 ## Scripts
 
 - `npm run dev` - start local dev server
 - `npm run build` - build production files
 - `npm run preview` - preview production build
 - `npm run login` - login Firebase CLI
-- `npm run deploy` - deploy hosting
+- `npm run deploy` - deploy Firebase hosting
+- `npm run deploy:vercel` - deploy to Vercel
 
 ## Firebase helpers
 
