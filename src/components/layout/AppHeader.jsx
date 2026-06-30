@@ -9,15 +9,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 const AppHeader = ({ onOpenSidebar }) => {
   const { mode, toggleTheme } = useThemeMode();
-  const { user, signOutUser } = useAuth();
-
-  const handleSignOut = async () => {
-    try {
-      await signOutUser();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { user } = useAuth();
 
   return (
     <AppBar position="sticky" color="inherit" elevation={1}>
@@ -38,9 +30,6 @@ const AppHeader = ({ onOpenSidebar }) => {
             {user.displayName}
           </Typography>
         )}
-        <IconButton color="inherit" onClick={handleSignOut} sx={{ ml: 1 }}>
-          <Typography variant="button">ออกจากระบบ</Typography>
-        </IconButton>
       </Toolbar>
     </AppBar>
   );
