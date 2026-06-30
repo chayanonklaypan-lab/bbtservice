@@ -1,5 +1,7 @@
 node_modules/
 dist/
+.firebase/
+setup_output.txt
 .env
 .DS_Store
 .vscode/
