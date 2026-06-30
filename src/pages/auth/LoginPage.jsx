@@ -1,38 +1,30 @@
-import React, { useState } from 'react';
-import { Box, Button, Container, Typography, Alert } from '@mui/material';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import appRoutes from '../../constants/appRoutes';
 
 const LoginPage = () => {
-  const [error, setError] = useState(null);
-  const { signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    setError(null);
-    try {
-      await signInWithGoogle();
-    } catch (err) {
-      console.error(err);
-      setError('ไม่สามารถเข้าสู่ระบบได้ โปรดลองอีกครั้ง');
-    }
-  };
+  useEffect(() => {
+    // Auto-navigate to dashboard (no authentication required for shared access)
+    const timer = setTimeout(() => {
+      navigate(appRoutes.dashboard, { replace: true });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   return (
     <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Box sx={{ textAlign: 'center' }}>
+      <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           ระบบบริหารงานบริการสาธารณสุข
         </Typography>
-        <Typography variant="body1" sx={{ mb: 4 }}>
-          เข้าสู่ระบบด้วยบัญชี Google เพื่อใช้งานระบบ
+        <CircularProgress />
+        <Typography variant="body1">
+          กำลังเข้าสู่ระบบ...
         </Typography>
-        {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {error}
-          </Alert>
-        )}
-        <Button variant="contained" size="large" onClick={handleLogin}>
-          เข้าสู่ระบบด้วย Google
-        </Button>
       </Box>
     </Container>
   );

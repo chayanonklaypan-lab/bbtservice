@@ -1,7 +1,4 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/firebaseConfig';
-import { getUserProfile, signInWithGoogle, signOutUser } from '../services/authService';
 
 const AuthContext = createContext(null);
 
@@ -10,28 +7,19 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!firebaseUser) {
-        setUser(null);
-        setLoading(false);
-        return;
-      }
-
-      const profile = await getUserProfile(firebaseUser.uid);
-      setUser({
-        uid: firebaseUser.uid,
-        displayName: firebaseUser.displayName || profile?.displayName,
-        email: firebaseUser.email || profile?.email,
-        photoURL: firebaseUser.photoURL || profile?.photoURL,
-        role: profile?.role || 'Operator',
-      });
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    // Auto-login with default shared user (no Firebase authentication required)
+    const defaultUser = {
+      uid: 'shared-user',
+      displayName: 'ผู้ใช้งาน',
+      email: 'shared@system.local',
+      photoURL: null,
+      role: 'Admin',
+    };
+    setUser(defaultUser);
+    setLoading(false);
   }, []);
 
-  const value = useMemo(() => ({ user, loading, signInWithGoogle, signOutUser }), [user, loading]);
+  const value = useMemo(() => ({ user, loading }), [user, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
