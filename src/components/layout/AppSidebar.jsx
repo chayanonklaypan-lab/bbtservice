@@ -28,15 +28,15 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
   const visibleItems = menuItems.filter((item) => item.allowedRoles.includes(user?.role));
 
   const drawerContent = (
-    <>
-      <Box sx={{ px: 2.5, py: 2.25, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+    <Box sx={{ display: 'flex', minHeight: '100%', flexDirection: 'column' }}>
+      <Box sx={{ px: 2, py: 1.75, display: 'flex', alignItems: 'center', gap: 1.25, minHeight: 64 }}>
         <Box
           component="img"
           src={municipalityLogo}
           alt="เทศบาลนครบางบัวทอง"
           sx={{
-            width: 56,
-            height: 56,
+            width: 44,
+            height: 44,
             borderRadius: '50%',
             objectFit: 'cover',
             flexShrink: 0,
@@ -45,16 +45,16 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
           }}
         />
         <Box sx={{ minWidth: 0 }}>
-          <Typography variant="subtitle1" noWrap sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+          <Typography variant="subtitle2" noWrap sx={{ fontWeight: 800, lineHeight: 1.25 }}>
             เทศบาลนครบางบัวทอง
           </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap sx={{ mt: 0.5 }}>
+          <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block', mt: 0.25 }}>
             ระบบงานบริการสาธารณสุข
           </Typography>
         </Box>
       </Box>
       <Divider />
-      <List sx={{ px: 1.5, py: 1.5 }}>
+      <List sx={{ px: 1.25, py: 1.25 }}>
         {visibleItems.map((item) => {
           const selected = item.path === '/' ? location.pathname === '/' : location.pathname.startsWith(item.path);
 
@@ -67,8 +67,9 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
               onClick={onClose}
               sx={{
                 mb: 0.5,
-                minHeight: 46,
-                borderRadius: 1.5,
+                minHeight: 42,
+                px: 1.5,
+                borderRadius: 1.25,
                 '&.Mui-selected': {
                   bgcolor: 'primary.main',
                   color: 'primary.contrastText',
@@ -77,16 +78,16 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
                 },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+              <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
               <ListItemText
                 primary={item.label}
-                primaryTypographyProps={{ fontSize: 14, fontWeight: selected ? 700 : 500 }}
+                primaryTypographyProps={{ fontSize: 14, fontWeight: selected ? 800 : 600 }}
               />
             </ListItemButton>
           );
         })}
       </List>
-    </>
+    </Box>
   );
 
   return (
@@ -112,6 +113,7 @@ const AppSidebar = ({ drawerWidth, open, onClose }) => {
             width: drawerWidth,
             borderRight: 1,
             borderColor: 'divider',
+            bgcolor: 'background.paper',
           },
         }}
         open

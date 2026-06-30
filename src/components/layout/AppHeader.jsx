@@ -24,12 +24,12 @@ const AppHeader = ({ drawerWidth, headerHeight, onOpenSidebar }) => {
         bgcolor: 'background.paper',
       }}
     >
-      <Toolbar sx={{ minHeight: `${headerHeight}px !important`, gap: 1.5, px: { xs: 2, sm: 3 } }}>
+      <Toolbar sx={{ minHeight: `${headerHeight}px !important`, gap: 1.25, px: { xs: 2, sm: 3 } }}>
         <IconButton edge="start" color="inherit" onClick={onOpenSidebar} sx={{ display: { md: 'none' } }}>
           <MenuIcon />
         </IconButton>
         <Box sx={{ minWidth: 0, flexGrow: 1 }}>
-          <Typography variant="h6" noWrap sx={{ fontWeight: 700, fontSize: { xs: 18, sm: 20 } }}>
+          <Typography variant="h6" noWrap sx={{ fontWeight: 800, fontSize: { xs: 17, sm: 19 } }}>
             ระบบบริหารงานบริการสาธารณสุข
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap sx={{ display: { xs: 'none', sm: 'block' } }}>
@@ -41,7 +41,7 @@ const AppHeader = ({ drawerWidth, headerHeight, onOpenSidebar }) => {
             avatar={<Avatar>{user.displayName?.charAt(0) || 'U'}</Avatar>}
             label={user.displayName}
             variant="outlined"
-            sx={{ display: { xs: 'none', sm: 'inline-flex' }, maxWidth: 180 }}
+            sx={{ display: { xs: 'none', sm: 'inline-flex' }, maxWidth: 160 }}
           />
         )}
         <Tooltip title={mode === 'dark' ? 'Light mode' : 'Dark mode'}>

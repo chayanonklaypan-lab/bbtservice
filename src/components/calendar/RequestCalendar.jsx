@@ -33,7 +33,7 @@ const RequestCalendar = () => {
   return (
     <Box
       sx={{
-        p: { xs: 1.5, sm: 2 },
+        p: { xs: 1.25, sm: 1.5 },
         minHeight: 640,
         backgroundColor: 'background.paper',
         border: 1,
@@ -55,6 +55,7 @@ const RequestCalendar = () => {
         selectable
         eventDisplay="block"
         height="auto"
+        contentHeight="auto"
       />
     </Box>
   );
