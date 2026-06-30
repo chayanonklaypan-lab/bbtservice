@@ -1,14 +1,17 @@
 import React from 'react';
-import { Container, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import RequestCalendar from '../../components/calendar/RequestCalendar';
 
 const CalendarPage = () => (
-  <Container maxWidth="xl" sx={{ py: 4 }}>
-    <Typography variant="h4" gutterBottom>
-      ปฏิทินงานบริการ
-    </Typography>
+  <Stack spacing={3}>
+    <Box>
+      <Typography variant="h4">ปฏิทินงานบริการ</Typography>
+      <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+        ดูกำหนดการให้บริการแบบรายเดือน รายสัปดาห์ และรายวัน
+      </Typography>
+    </Box>
     <RequestCalendar />
-  </Container>
+  </Stack>
 );
 
 export default CalendarPage;

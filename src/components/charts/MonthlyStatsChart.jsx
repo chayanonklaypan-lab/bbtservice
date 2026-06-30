@@ -11,15 +11,22 @@ const MonthlyStatsChart = ({ data }) => {
       {
         label: 'จำนวนงาน',
         data: data.map((item) => item.count),
-        backgroundColor: '#1976d2',
+        backgroundColor: '#0f766e',
+        borderRadius: 6,
+        maxBarThickness: 42,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { beginAtZero: true, ticks: { precision: 0 } },
     },
   };
 

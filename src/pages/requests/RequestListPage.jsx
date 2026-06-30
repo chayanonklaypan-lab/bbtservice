@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Container, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Stack, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { getRequests } from '../../services/firestoreService';
 import SearchFilterPanel from '../../components/ui/SearchFilterPanel';
 import RequestTable from '../../components/tables/RequestTable';
@@ -48,23 +49,24 @@ const RequestListPage = () => {
   }, [filters.search, requests]);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
-        <Typography variant="h4">คำร้องบริการ</Typography>
-        <Button variant="contained" onClick={() => navigate('/requests/new')}>
+    <Stack spacing={3}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'stretch', sm: 'center' }} spacing={2}>
+        <Box>
+          <Typography variant="h4">คำร้องบริการ</Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+            ติดตามและจัดการคำร้องทั้งหมดในระบบ
+          </Typography>
+        </Box>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/requests/new')}>
           สร้างคำร้องใหม่
         </Button>
       </Stack>
 
       <SearchFilterPanel filters={filters} onChange={setFilters} onReset={handleReset} />
+      {error && <Alert severity="error">{error}</Alert>}
+      {loading && <Alert severity="info">กำลังโหลดคำร้อง...</Alert>}
       <RequestTable requests={filteredRequests} onRowClick={(id) => navigate(`/requests/${id}`)} />
-      {loading && <Typography sx={{ mt: 2 }}>กำลังโหลดคำร้อง...</Typography>}
-      {error && (
-        <Typography color="error" sx={{ mt: 2 }}>
-          {error}
-        </Typography>
-      )}
-    </Container>
+    </Stack>
   );
 };
 

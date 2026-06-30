@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
 import { getSettings, updateSetting } from '../../services/firestoreService';
 import { useNotifications } from '../../hooks/useNotifications';
 
@@ -43,38 +44,34 @@ const SettingsPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        ตั้งค่า
-      </Typography>
-      <Box sx={{ p: 3, backgroundColor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
-        <TextField
-          fullWidth
-          label="ชื่อระบบ"
-          value={settings.siteName || ''}
-          onChange={handleChange('siteName')}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="อีเมลติดต่อ"
-          value={settings.contactEmail || ''}
-          onChange={handleChange('contactEmail')}
-          margin="normal"
-        />
-        <FormControl fullWidth margin="normal">
-          <InputLabel>โหมดเริ่มต้น</InputLabel>
-          <Select value={settings.defaultTheme || 'light'} label="โหมดเริ่มต้น" onChange={handleChange('defaultTheme')}>
-            <MenuItem value="light">Light</MenuItem>
-            <MenuItem value="dark">Dark</MenuItem>
-          </Select>
-        </FormControl>
-        <Button variant="contained" onClick={handleSave} disabled={saving || loading} sx={{ mt: 2 }}>
-          บันทึกการตั้งค่า
-        </Button>
+    <Stack spacing={3} sx={{ maxWidth: 760 }}>
+      <Box>
+        <Typography variant="h4">ตั้งค่า</Typography>
+        <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+          กำหนดข้อมูลพื้นฐานของระบบ
+        </Typography>
       </Box>
-      {loading && <Typography sx={{ mt: 2 }}>กำลังโหลดการตั้งค่า...</Typography>}
-    </Container>
+
+      {loading && <Alert severity="info">กำลังโหลดการตั้งค่า...</Alert>}
+      <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
+        <Stack spacing={2.5}>
+          <TextField fullWidth label="ชื่อระบบ" value={settings.siteName || ''} onChange={handleChange('siteName')} />
+          <TextField fullWidth label="อีเมลติดต่อ" value={settings.contactEmail || ''} onChange={handleChange('contactEmail')} />
+          <FormControl fullWidth>
+            <InputLabel>โหมดเริ่มต้น</InputLabel>
+            <Select value={settings.defaultTheme || 'light'} label="โหมดเริ่มต้น" onChange={handleChange('defaultTheme')}>
+              <MenuItem value="light">Light</MenuItem>
+              <MenuItem value="dark">Dark</MenuItem>
+            </Select>
+          </FormControl>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave} disabled={saving || loading}>
+              บันทึกการตั้งค่า
+            </Button>
+          </Box>
+        </Stack>
+      </Paper>
+    </Stack>
   );
 };
 

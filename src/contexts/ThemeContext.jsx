@@ -6,15 +6,44 @@ const ThemeModeContext = createContext(null);
 const buildTheme = (mode) => createTheme({
   palette: {
     mode,
-    primary: { main: '#1976d2' },
-    secondary: { main: '#009688' },
+    primary: { main: '#0f766e', dark: '#115e59', light: '#5eead4' },
+    secondary: { main: '#2563eb' },
     background: {
-      default: mode === 'light' ? '#f4f6f8' : '#121212',
-      paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+      default: mode === 'light' ? '#f5f7fb' : '#101418',
+      paper: mode === 'light' ? '#ffffff' : '#182026',
     },
   },
+  shape: {
+    borderRadius: 8,
+  },
   typography: {
-    fontFamily: ['Inter', 'Roboto', 'sans-serif'].join(','),
+    fontFamily: ['Inter', 'Noto Sans Thai', 'Roboto', 'sans-serif'].join(','),
+    h4: { fontWeight: 800, letterSpacing: 0 },
+    h5: { fontWeight: 800, letterSpacing: 0 },
+    h6: { fontWeight: 700, letterSpacing: 0 },
+    button: { fontWeight: 700, textTransform: 'none' },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: { borderRadius: 8, boxShadow: 'none' },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: { borderRadius: 8, boxShadow: '0 1px 3px rgba(15, 23, 42, 0.08)' },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        rounded: { borderRadius: 8 },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        head: { fontWeight: 800, backgroundColor: mode === 'light' ? '#f8fafc' : '#121a20' },
+      },
+    },
   },
 });
 

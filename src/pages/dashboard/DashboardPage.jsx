@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Container, Typography, Box } from '@mui/material';
+import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import SummaryCard from '../../components/cards/SummaryCard';
 import MonthlyStatsChart from '../../components/charts/MonthlyStatsChart';
 import { getDashboardSummary } from '../../services/dashboardService';
@@ -24,31 +24,49 @@ const DashboardPage = () => {
   }, []);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Dashboard
-      </Typography>
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <SummaryCard title="จำนวนคำร้องทั้งหมด" value={summary.totalRequests} />
+    <Stack spacing={3}>
+      <Box>
+        <Typography variant="h4">Dashboard</Typography>
+        <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+          ภาพรวมงานบริการและสถานะคำร้องล่าสุด
+        </Typography>
+      </Box>
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} lg={3}>
+          <SummaryCard title="คำร้องทั้งหมด" value={summary.totalRequests} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <SummaryCard title="งานวันนี้" value={summary.pending} />
+        <Grid item xs={12} sm={6} lg={3}>
+          <SummaryCard title="งานวันนี้ / รอดำเนินการ" value={summary.pending} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <SummaryCard title="งานเสร็จแล้ว" value={summary.completed} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <SummaryCard title="งานยกเลิก" value={summary.cancelled} />
         </Grid>
       </Grid>
-      <Box sx={{ p: 2, backgroundColor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
-        <Typography variant="h6" gutterBottom>
-          สถิติรายเดือน
-        </Typography>
-        <MonthlyStatsChart data={summary.byMonth} />
-      </Box>
-    </Container>
+
+      <Paper
+        variant="outlined"
+        sx={{
+          p: { xs: 2, sm: 3 },
+          minHeight: 380,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h6">สถิติรายเดือน</Typography>
+          <Typography variant="body2" color="text.secondary">
+            จำนวนคำร้องที่บันทึกในแต่ละเดือน
+          </Typography>
+        </Box>
+        <Box sx={{ flex: 1, minHeight: 280 }}>
+          <MonthlyStatsChart data={summary.byMonth} />
+        </Box>
+      </Paper>
+    </Stack>
   );
 };
 

@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,6 +9,7 @@ import {
   IconButton,
   MenuItem,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -19,6 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { createUser, deleteUser, getUsers, updateUser } from '../../services/firestoreService';
@@ -114,60 +115,70 @@ const StaffPage = () => {
   };
 
   const staffRows = useMemo(
-    () => staff.map((member) => (
-      <TableRow key={member.id} hover>
-        <TableCell>{member.displayName || '-'}</TableCell>
-        <TableCell>{member.email || '-'}</TableCell>
-        <TableCell>{member.role || '-'}</TableCell>
-        <TableCell>
-          <IconButton size="small" onClick={() => handleOpenDialog(member)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton size="small" color="error" onClick={() => handleDelete(member.id)}>
-            <DeleteIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    )),
+    () =>
+      staff.map((member) => (
+        <TableRow key={member.id} hover sx={{ '&:last-child td': { borderBottom: 0 } }}>
+          <TableCell sx={{ fontWeight: 700 }}>{member.displayName || '-'}</TableCell>
+          <TableCell>{member.email || '-'}</TableCell>
+          <TableCell>{member.role || '-'}</TableCell>
+          <TableCell align="right">
+            <IconButton size="small" onClick={() => handleOpenDialog(member)}>
+              <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" color="error" onClick={() => handleDelete(member.id)}>
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      )),
     [staff]
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">เจ้าหน้าที่</Typography>
-        <Button variant="contained" onClick={() => handleOpenDialog()}>
+    <Stack spacing={3}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'stretch', sm: 'center' }} spacing={2}>
+        <Box>
+          <Typography variant="h4">เจ้าหน้าที่</Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+            จัดการบัญชีและบทบาทผู้ใช้งาน
+          </Typography>
+        </Box>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
           เพิ่มเจ้าหน้าที่
         </Button>
-      </Box>
-      <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
-        <Table>
+      </Stack>
+
+      <TableContainer component={Paper} variant="outlined" sx={{ overflowX: 'auto' }}>
+        <Table sx={{ minWidth: 720 }}>
           <TableHead>
             <TableRow>
               <TableCell>ชื่อ</TableCell>
               <TableCell>อีเมล</TableCell>
               <TableCell>บทบาท</TableCell>
-              <TableCell>จัดการ</TableCell>
+              <TableCell align="right">จัดการ</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{loading ? (
-            <TableRow>
-              <TableCell colSpan={4} align="center">
-                กำลังโหลดข้อมูล...
-              </TableCell>
-            </TableRow>
-          ) : staffRows}</TableBody>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={4} align="center" sx={{ py: 6 }}>
+                  กำลังโหลดข้อมูล...
+                </TableCell>
+              </TableRow>
+            ) : (
+              staffRows
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
 
       <Dialog open={dialogOpen} onClose={handleCloseDialog} fullWidth maxWidth="sm">
         <DialogTitle>{editingId ? 'แก้ไขเจ้าหน้าที่' : 'เพิ่มเจ้าหน้าที่ใหม่'}</DialogTitle>
         <DialogContent>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{ pt: 1 }}>
             <TextField
               fullWidth
               label="ชื่อ"
-              margin="normal"
               name="displayName"
               value={form.displayName}
               onChange={(event) => setForm((prev) => ({ ...prev, displayName: event.target.value }))}
@@ -176,7 +187,6 @@ const StaffPage = () => {
             <TextField
               fullWidth
               label="อีเมล"
-              margin="normal"
               name="email"
               type="email"
               value={form.email}
@@ -187,7 +197,6 @@ const StaffPage = () => {
               select
               fullWidth
               label="บทบาท"
-              margin="normal"
               name="role"
               value={form.role}
               onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value }))}
@@ -199,16 +208,16 @@ const StaffPage = () => {
                 </MenuItem>
               ))}
             </TextField>
-          </Box>
+          </Stack>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={handleCloseDialog}>ยกเลิก</Button>
           <Button onClick={handleSubmit} variant="contained" disabled={submitting}>
             บันทึก
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </Stack>
   );
 };
 

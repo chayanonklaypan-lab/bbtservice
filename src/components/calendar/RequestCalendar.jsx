@@ -31,7 +31,17 @@ const RequestCalendar = () => {
   }, []);
 
   return (
-    <Box sx={{ p: 2, backgroundColor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
+    <Box
+      sx={{
+        p: { xs: 1.5, sm: 2 },
+        minHeight: 640,
+        backgroundColor: 'background.paper',
+        border: 1,
+        borderColor: 'divider',
+        borderRadius: 2,
+        overflow: 'hidden',
+      }}
+    >
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
         initialView="dayGridMonth"
@@ -44,6 +54,7 @@ const RequestCalendar = () => {
         editable
         selectable
         eventDisplay="block"
+        height="auto"
       />
     </Box>
   );

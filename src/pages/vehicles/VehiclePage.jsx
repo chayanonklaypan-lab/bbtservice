@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
+  MenuItem,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -18,10 +19,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { createVehicle, deleteVehicle, getVehicles, updateVehicle } from '../../services/firestoreService';
 import { useNotifications } from '../../hooks/useNotifications';
+
+const vehicleStatuses = ['พร้อม', 'กำลังใช้งาน', 'ซ่อมบำรุง', 'งดใช้งาน'];
 
 const initialVehicle = {
   licensePlate: '',
@@ -114,62 +118,72 @@ const VehiclePage = () => {
   };
 
   const vehicleRows = useMemo(
-    () => vehicles.map((vehicle) => (
-      <TableRow key={vehicle.id} hover>
-        <TableCell>{vehicle.licensePlate || '-'}</TableCell>
-        <TableCell>{vehicle.name || '-'}</TableCell>
-        <TableCell>{vehicle.type || '-'}</TableCell>
-        <TableCell>{vehicle.status || '-'}</TableCell>
-        <TableCell>
-          <IconButton size="small" onClick={() => handleOpenDialog(vehicle)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton size="small" color="error" onClick={() => handleDelete(vehicle.id)}>
-            <DeleteIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    )),
+    () =>
+      vehicles.map((vehicle) => (
+        <TableRow key={vehicle.id} hover sx={{ '&:last-child td': { borderBottom: 0 } }}>
+          <TableCell sx={{ fontWeight: 700 }}>{vehicle.licensePlate || '-'}</TableCell>
+          <TableCell>{vehicle.name || '-'}</TableCell>
+          <TableCell>{vehicle.type || '-'}</TableCell>
+          <TableCell>{vehicle.status || '-'}</TableCell>
+          <TableCell align="right">
+            <IconButton size="small" onClick={() => handleOpenDialog(vehicle)}>
+              <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" color="error" onClick={() => handleDelete(vehicle.id)}>
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      )),
     [vehicles]
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">รถบริการ</Typography>
-        <Button variant="contained" onClick={() => handleOpenDialog()}>
+    <Stack spacing={3}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'stretch', sm: 'center' }} spacing={2}>
+        <Box>
+          <Typography variant="h4">รถบริการ</Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+            จัดการทะเบียนรถและสถานะพร้อมใช้งาน
+          </Typography>
+        </Box>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
           เพิ่มรถใหม่
         </Button>
-      </Box>
-      <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
-        <Table>
+      </Stack>
+
+      <TableContainer component={Paper} variant="outlined" sx={{ overflowX: 'auto' }}>
+        <Table sx={{ minWidth: 720 }}>
           <TableHead>
             <TableRow>
               <TableCell>ทะเบียน</TableCell>
               <TableCell>ชื่อรถ</TableCell>
               <TableCell>ประเภท</TableCell>
               <TableCell>สถานะ</TableCell>
-              <TableCell>จัดการ</TableCell>
+              <TableCell align="right">จัดการ</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{loading ? (
-            <TableRow>
-              <TableCell colSpan={5} align="center">
-                กำลังโหลดข้อมูล...
-              </TableCell>
-            </TableRow>
-          ) : vehicleRows}</TableBody>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center" sx={{ py: 6 }}>
+                  กำลังโหลดข้อมูล...
+                </TableCell>
+              </TableRow>
+            ) : (
+              vehicleRows
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
 
       <Dialog open={dialogOpen} onClose={handleCloseDialog} fullWidth maxWidth="sm">
         <DialogTitle>{editingId ? 'แก้ไขรถบริการ' : 'เพิ่มรถบริการใหม่'}</DialogTitle>
         <DialogContent>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{ pt: 1 }}>
             <TextField
               fullWidth
               label="ทะเบียนรถ"
-              margin="normal"
               name="licensePlate"
               value={form.licensePlate}
               onChange={(event) => setForm((prev) => ({ ...prev, licensePlate: event.target.value }))}
@@ -178,7 +192,6 @@ const VehiclePage = () => {
             <TextField
               fullWidth
               label="ชื่อรถ"
-              margin="normal"
               name="name"
               value={form.name}
               onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
@@ -187,31 +200,36 @@ const VehiclePage = () => {
             <TextField
               fullWidth
               label="ประเภทรถ"
-              margin="normal"
               name="type"
               value={form.type}
               onChange={(event) => setForm((prev) => ({ ...prev, type: event.target.value }))}
               required
             />
             <TextField
+              select
               fullWidth
               label="สถานะ"
-              margin="normal"
               name="status"
               value={form.status}
               onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value }))}
               required
-            />
-          </Box>
+            >
+              {vehicleStatuses.map((status) => (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={handleCloseDialog}>ยกเลิก</Button>
           <Button onClick={handleSubmit} variant="contained" disabled={submitting}>
             บันทึก
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </Stack>
   );
 };
 

@@ -1,32 +1,31 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Paper, Typography } from '@mui/material';
 import appRoutes from '../../constants/appRoutes';
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Auto-navigate to dashboard (no authentication required for shared access)
     const timer = setTimeout(() => {
       navigate(appRoutes.dashboard, { replace: true });
-    }, 500);
+    }, 350);
 
     return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+    <Box sx={{ minHeight: '100vh', display: 'grid', placeItems: 'center', bgcolor: 'background.default', p: 2 }}>
+      <Paper variant="outlined" sx={{ width: '100%', maxWidth: 420, p: 4, textAlign: 'center' }}>
+        <CircularProgress size={36} />
+        <Typography variant="h5" sx={{ mt: 2 }}>
           ระบบบริหารงานบริการสาธารณสุข
         </Typography>
-        <CircularProgress />
-        <Typography variant="body1">
+        <Typography color="text.secondary" sx={{ mt: 1 }}>
           กำลังเข้าสู่ระบบ...
         </Typography>
-      </Box>
-    </Container>
+      </Paper>
+    </Box>
   );
 };
 

@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Auto-login with default shared user (no Firebase authentication required)
     const defaultUser = {
       uid: 'shared-user',
       displayName: 'ผู้ใช้งาน',

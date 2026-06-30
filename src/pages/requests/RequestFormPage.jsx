@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SaveIcon from '@mui/icons-material/Save';
 import { useForm, Controller } from 'react-hook-form';
 import { createRequest, getUsers, getVehicles } from '../../services/firestoreService';
 import { useNotifications } from '../../hooks/useNotifications';
@@ -57,105 +59,142 @@ const RequestFormPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        สร้างคำร้องใหม่
-      </Typography>
-      <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Controller
-          name="requesterName"
-          control={control}
-          render={({ field }) => <TextField fullWidth label="ชื่อผู้แจ้ง" margin="normal" {...field} required />}
-        />
-        <Controller
-          name="requesterPhone"
-          control={control}
-          render={({ field }) => <TextField fullWidth label="เบอร์โทร" margin="normal" {...field} required />}
-        />
-        <Controller
-          name="requestType"
-          control={control}
-          render={({ field }) => (
-            <TextField select fullWidth label="ประเภทงาน" margin="normal" {...field} required>
-              {Object.values(requestTypes).map((type) => (
-                <MenuItem key={type} value={type}>
-                  {type}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
-        />
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => <TextField fullWidth label="รายละเอียด" margin="normal" multiline minRows={4} {...field} required />}
-        />
-        <Controller
-          name="address"
-          control={control}
-          render={({ field }) => <TextField fullWidth label="ที่อยู่" margin="normal" {...field} />}
-        />
-        <Box sx={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-          <Controller
-            name="district"
-            control={control}
-            render={({ field }) => <TextField fullWidth label="ตำบล/แขวง" margin="normal" {...field} />}
-          />
-          <Controller
-            name="amphoe"
-            control={control}
-            render={({ field }) => <TextField fullWidth label="อำเภอ" margin="normal" {...field} />}
-          />
-          <Controller
-            name="province"
-            control={control}
-            render={({ field }) => <TextField fullWidth label="จังหวัด" margin="normal" {...field} />}
-          />
+    <Stack spacing={3} sx={{ maxWidth: 980 }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'stretch', sm: 'center' }} spacing={2}>
+        <Box>
+          <Typography variant="h4">สร้างคำร้องใหม่</Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+            บันทึกข้อมูลผู้แจ้ง รายละเอียดงาน และผู้รับผิดชอบ
+          </Typography>
         </Box>
-        <Controller
-          name="vehicleId"
-          control={control}
-          render={({ field }) => (
-            <FormControl fullWidth margin="normal">
-              <InputLabel>รถบริการ</InputLabel>
-              <Select label="รถบริการ" {...field}>
-                <MenuItem value="">ไม่ระบุ</MenuItem>
-                {vehicles.map((vehicle) => (
-                  <MenuItem key={vehicle.id} value={vehicle.id}>
-                    {vehicle.name} ({vehicle.licensePlate})
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-        />
-        <Controller
-          name="assigneeId"
-          control={control}
-          render={({ field }) => (
-            <FormControl fullWidth margin="normal">
-              <InputLabel>ผู้รับมอบหมาย</InputLabel>
-              <Select label="ผู้รับมอบหมาย" {...field}>
-                <MenuItem value="">ไม่ระบุ</MenuItem>
-                {assignees.map((assignee) => (
-                  <MenuItem key={assignee.id} value={assignee.id}>
-                    {assignee.displayName || assignee.email}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2, mt: 4 }}>
-          <Button variant="outlined" onClick={() => navigate('/requests')}>
-            ยกเลิก
-          </Button>
-          <Button type="submit" variant="contained" disabled={isSubmitting}>
-            บันทึกคำร้อง
-          </Button>
-        </Box>
-      </Box>
-    </Container>
+        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate('/requests')}>
+          กลับ
+        </Button>
+      </Stack>
+
+      <Paper component="form" onSubmit={handleSubmit(onSubmit)} noValidate variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
+        <Stack spacing={3}>
+          <Box>
+            <Typography variant="h6">ข้อมูลผู้แจ้ง</Typography>
+            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="requesterName"
+                  control={control}
+                  render={({ field }) => <TextField fullWidth label="ชื่อผู้แจ้ง" {...field} required />}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="requesterPhone"
+                  control={control}
+                  render={({ field }) => <TextField fullWidth label="เบอร์โทร" {...field} required />}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box>
+            <Typography variant="h6">รายละเอียดงาน</Typography>
+            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="requestType"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField select fullWidth label="ประเภทงาน" {...field} required>
+                      {Object.values(requestTypes).map((type) => (
+                        <MenuItem key={type} value={type}>
+                          {type}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => <TextField fullWidth label="รายละเอียด" multiline minRows={4} {...field} required />}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box>
+            <Typography variant="h6">สถานที่</Typography>
+            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+              <Grid item xs={12}>
+                <Controller name="address" control={control} render={({ field }) => <TextField fullWidth label="ที่อยู่" {...field} />} />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Controller name="district" control={control} render={({ field }) => <TextField fullWidth label="ตำบล/แขวง" {...field} />} />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Controller name="amphoe" control={control} render={({ field }) => <TextField fullWidth label="อำเภอ" {...field} />} />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Controller name="province" control={control} render={({ field }) => <TextField fullWidth label="จังหวัด" {...field} />} />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box>
+            <Typography variant="h6">การมอบหมาย</Typography>
+            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="vehicleId"
+                  control={control}
+                  render={({ field }) => (
+                    <FormControl fullWidth>
+                      <InputLabel>รถบริการ</InputLabel>
+                      <Select label="รถบริการ" {...field}>
+                        <MenuItem value="">ไม่ระบุ</MenuItem>
+                        {vehicles.map((vehicle) => (
+                          <MenuItem key={vehicle.id} value={vehicle.id}>
+                            {vehicle.name} ({vehicle.licensePlate})
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="assigneeId"
+                  control={control}
+                  render={({ field }) => (
+                    <FormControl fullWidth>
+                      <InputLabel>ผู้รับมอบหมาย</InputLabel>
+                      <Select label="ผู้รับมอบหมาย" {...field}>
+                        <MenuItem value="">ไม่ระบุ</MenuItem>
+                        {assignees.map((assignee) => (
+                          <MenuItem key={assignee.id} value={assignee.id}>
+                            {assignee.displayName || assignee.email}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Stack direction={{ xs: 'column-reverse', sm: 'row' }} justifyContent="flex-end" spacing={1.5}>
+            <Button variant="outlined" onClick={() => navigate('/requests')}>
+              ยกเลิก
+            </Button>
+            <Button type="submit" variant="contained" startIcon={<SaveIcon />} disabled={isSubmitting}>
+              บันทึกคำร้อง
+            </Button>
+          </Stack>
+        </Stack>
+      </Paper>
+    </Stack>
   );
 };
 
