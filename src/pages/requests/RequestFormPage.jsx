@@ -154,7 +154,7 @@ const RequestFormPage = () => {
                         <MenuItem value="">ไม่ระบุ</MenuItem>
                         {vehicles.map((vehicle) => (
                           <MenuItem key={vehicle.id} value={vehicle.id}>
-                            {vehicle.name} ({vehicle.licensePlate})
+                            {vehicle.name} ({vehicle.licensePlate}){vehicle.driverName ? ` - คนขับ: ${vehicle.driverName}` : ''}
                           </MenuItem>
                         ))}
                       </Select>

@@ -31,6 +31,7 @@ const initialVehicle = {
   licensePlate: '',
   name: '',
   type: '',
+  driverName: '',
   status: 'พร้อม',
 };
 
@@ -66,6 +67,7 @@ const VehiclePage = () => {
         licensePlate: vehicle.licensePlate || '',
         name: vehicle.name || '',
         type: vehicle.type || '',
+        driverName: vehicle.driverName || '',
         status: vehicle.status || 'พร้อม',
       });
       setEditingId(vehicle.id);
@@ -124,6 +126,7 @@ const VehiclePage = () => {
           <TableCell sx={{ fontWeight: 700 }}>{vehicle.licensePlate || '-'}</TableCell>
           <TableCell>{vehicle.name || '-'}</TableCell>
           <TableCell>{vehicle.type || '-'}</TableCell>
+          <TableCell>{vehicle.driverName || '-'}</TableCell>
           <TableCell>{vehicle.status || '-'}</TableCell>
           <TableCell align="right">
             <IconButton size="small" onClick={() => handleOpenDialog(vehicle)}>
@@ -153,12 +156,13 @@ const VehiclePage = () => {
       </Stack>
 
       <TableContainer component={Paper} variant="outlined" sx={{ overflowX: 'auto' }}>
-        <Table sx={{ minWidth: 720 }}>
+        <Table sx={{ minWidth: 840 }}>
           <TableHead>
             <TableRow>
               <TableCell>ทะเบียน</TableCell>
               <TableCell>ชื่อรถ</TableCell>
               <TableCell>ประเภท</TableCell>
+              <TableCell>คนขับ</TableCell>
               <TableCell>สถานะ</TableCell>
               <TableCell align="right">จัดการ</TableCell>
             </TableRow>
@@ -166,7 +170,7 @@ const VehiclePage = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} align="center" sx={{ py: 6 }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 6 }}>
                   กำลังโหลดข้อมูล...
                 </TableCell>
               </TableRow>
@@ -204,6 +208,13 @@ const VehiclePage = () => {
               value={form.type}
               onChange={(event) => setForm((prev) => ({ ...prev, type: event.target.value }))}
               required
+            />
+            <TextField
+              fullWidth
+              label="ชื่อคนขับ"
+              name="driverName"
+              value={form.driverName}
+              onChange={(event) => setForm((prev) => ({ ...prev, driverName: event.target.value }))}
             />
             <TextField
               select
